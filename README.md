@@ -1,38 +1,47 @@
 # honkit-plugin-elasticsearch
 
-This plugin provides a backend for the [search](https://github.com/GitbookIO/plugin-search) plugin.
+This plugin provides an Elasticsearch backend for [HonKit](https://github.com/honkit/honkit)'s built-in search plugin.
+
+## Requirements
+
+- HonKit >= 6
+- Node.js >= 20
 
 ## Usage
 
-Gitbook comes with default search option.
-In order to use this plugin, need to disable `lunr` plugins and add `elasticsearch` as bellow:
+HonKit ships with a built-in search plugin and the `lunr` indexer is enabled by default.
+To use this plugin, disable `lunr` and add `elasticsearch` to your `book.json`:
 
-```
-"plugins": [
+```json
+{
+  "plugins": [
     "-lunr",
     "elasticsearch"
-  ]
-```
-add the following plugin configurations in book.json
-
-```
-{
-   "pluginsConfig": {
-     "elasticsearch": {
-       "host" : "http://your-elasticsearch:9200",
-       "index" : "your-index",
-       "apiKey" : "your-apikey",
-       "maxResults" : 30,
-     }
-   }
+  ],
+  "pluginsConfig": {
+    "elasticsearch": {
+      "host": "http://your-elasticsearch:9200",
+      "index": "your-index",
+      "apiKey": "your-apikey",
+      "maxResults": 30
+    }
+  }
 }
 ```
 
-Building your gitbook will generate a search index file in `_book` directory.
-Insert the index file into your elasticsearch.
+Install the plugin:
 
+```sh
+npm install --save-dev honkit honkit-plugin-elasticsearch
 ```
-curl -XPOST "http://your-elasticsearch:9200/your-index/_bulk" -H 'Content-Type: application/json' --data-binary @_book/search_index.json
+
+Building your book will generate `_book/search_index.json` in Elasticsearch `_bulk` format.
+Insert it into your Elasticsearch cluster:
+
+```sh
+curl -XPOST "http://your-elasticsearch:9200/your-index/_bulk" \
+  -H 'Content-Type: application/json' \
+  --data-binary @_book/search_index.json
 ```
 
 ### Adding keywords to a page
