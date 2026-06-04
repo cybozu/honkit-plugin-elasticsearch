@@ -11,11 +11,13 @@ const indexPath = path.join(exampleDir, '_book/search_index.json');
 
 if (!fs.existsSync(indexPath)) {
   // Build the example so the E2E test can run standalone.
-  spawnSync('pnpm', ['exec', 'honkit', 'build'], {
+  const result = spawnSync('pnpm', ['exec', 'honkit', 'build'], {
     cwd: exampleDir,
     stdio: 'inherit',
-    env: { ...process.env, NODE_PATH: path.join(exampleDir, 'node_modules') },
   });
+  if (result.status !== 0) {
+    throw new Error(`honkit build failed with exit code ${result.status}`);
+  }
 }
 
 async function esAvailable() {
