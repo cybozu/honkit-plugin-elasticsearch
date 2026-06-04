@@ -89,7 +89,10 @@ require([
         .then(function (results) {
           // A newer query has superseded this one; drop the result silently to
           // avoid clobbering the UI with stale data.
-          if (controller.signal.aborted) return
+          if (controller.signal.aborted) {
+            defer.resolve({ query: q, results: [], count: 0 })
+            return
+          }
           defer.resolve({
             query: q,
             results: results.slice(0, length),
@@ -98,7 +101,10 @@ require([
         })
         .catch(function (err) {
           // Aborted requests should not surface as errors to the UI.
-          if (err && err.name === 'AbortError') return
+          if (err && err.name === 'AbortError') {
+            defer.resolve({ query: q, results: [], count: 0 })
+            return
+          }
           if (defer.state() === 'pending') {
             defer.reject(err)
           }
