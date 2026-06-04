@@ -4,35 +4,16 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  default:
-    honkit:
-      specifier: ^6.2.1
-      version: 6.2.1
-
 importers:
 
   .:
     dependencies:
-      html-entities:
-        specifier: ^2.6.0
-        version: 2.6.0
-    devDependencies:
       honkit:
-        specifier: 'catalog:'
-        version: 6.2.1
-
-  example:
-    dependencies:
-      honkit:
-        specifier: 'catalog:'
+        specifier: ^6.2.1
         version: 6.2.1
       honkit-plugin-elasticsearch:
-        specifier: workspace:*
-        version: file:(honkit@6.2.1)
-    dependenciesMeta:
-      honkit-plugin-elasticsearch:
-        injected: true
+        specifier: link:..
+        version: link:..
 
 packages:
 
@@ -456,12 +437,6 @@ packages:
     resolution: {integrity: sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w==}
     engines: {node: '>=12.0.0'}
 
-  'honkit-plugin-elasticsearch@file:':
-    resolution: {directory: '', type: directory}
-    engines: {honkit: '>=6', node: '>=20', pnpm: '>=11'}
-    peerDependencies:
-      honkit: '>=6'
-
   honkit@6.2.1:
     resolution: {integrity: sha512-oV7t+u6J0HYVn6RIcFiSt0WArGhbM/Dy7zpJqE35RMAruOhuA0Qai/DvO6bm3TPycbsZ6vacuQ0AWVKaY475Ig==}
     hasBin: true
@@ -469,9 +444,6 @@ packages:
   html-entities@1.2.0:
     resolution: {integrity: sha512-0md7tlUUyb0BEQGsZzbqty1CgV6RESOoxdivt94AScqhBhYsPCCQCOaGvur/RospMjYpPJ7iFe3zw4Bu4SVA8g==}
     engines: {'0': node >= 0.4.0}
-
-  html-entities@2.6.0:
-    resolution: {integrity: sha512-kig+rMn/QOVRvr7c86gQ8lWXq+Hkv6CbAH1hLu+RG338StTpE8Z0b44SDVaqVu7HGKf27frdmUYEs9hTUX/cLQ==}
 
   htmlparser2@10.1.0:
     resolution: {integrity: sha512-VTZkM9GWRAtEpveh7MSF6SjjrpNVNNVJfFup7xTY3UpFtm67foy9HDVXneLtFVt4pMz5kZtgNcvCniNFb1hlEQ==}
@@ -1354,11 +1326,6 @@ snapshots:
 
   highlight.js@11.11.1: {}
 
-  honkit-plugin-elasticsearch@file:(honkit@6.2.1):
-    dependencies:
-      honkit: 6.2.1
-      html-entities: 2.6.0
-
   honkit@6.2.1:
     dependencies:
       '@honkit/asciidoc': 6.2.1
@@ -1413,8 +1380,6 @@ snapshots:
       - supports-color
 
   html-entities@1.2.0: {}
-
-  html-entities@2.6.0: {}
 
   htmlparser2@10.1.0:
     dependencies:

@@ -3,6 +3,10 @@
   "description": "HonKit search plugin for Elasticsearch",
   "main": "index.js",
   "version": "0.5.0",
+  "scripts": {
+    "test": "node --test --test-reporter=spec test/search-index.test.js",
+    "test:e2e": "RUN_ES_TESTS=1 node --test --test-reporter=spec test/elasticsearch.test.js"
+  },
   "files": [
     "index.js",
     "assets",
@@ -21,7 +25,7 @@
     "html-entities": "^2.6.0"
   },
   "devDependencies": {
-    "honkit": "^6.2.1"
+    "honkit": "catalog:"
   },
   "homepage": "https://github.com/cybozu/honkit-plugin-elasticsearch",
   "repository": {
