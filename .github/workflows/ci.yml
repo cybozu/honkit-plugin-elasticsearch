@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+
+    services:
+      elasticsearch:
+        image: ghcr.io/cybozu-go/website-operator-elasticsearch:8.19.13.1@sha256:11c0929b2099f44ff2f6ed79949d19e43ffd959d9aa77c2e7d8a1dbeeb55e30f
+        env:
+          discovery.type: single-node
+          xpack.security.enabled: "false"
+          ES_JAVA_OPTS: -Xms512m -Xmx512m
+        ports:
+          - 9200:9200
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
+        with:
+          version: 11
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install plugin dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build example and verify generated search index
+        run: pnpm test
+
+      - name: Wait for Elasticsearch
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://localhost:9200/_cluster/health >/dev/null; then
+              echo "Elasticsearch is up"; exit 0
+            fi
+            sleep 2
+          done
+          echo "Elasticsearch did not become ready" >&2; exit 1
+
+      - name: Elasticsearch end-to-end tests
+        run: pnpm run test:e2e
