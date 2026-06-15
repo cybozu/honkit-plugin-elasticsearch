@@ -1,0 +1,94 @@
+# Separate release workflow from normal CI workflow to keep the release process more secure.
+name: Release
+
+on:
+  push:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Do not interrupt an in-progress release.
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-slim
+    permissions:
+      contents: read
+    outputs:
+      release_required: ${{ steps.release.outputs.require }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Check if the release is necessary
+        id: release
+        run: |
+          VERSION="v$(jq -r '.version' package.json)"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          if git show-ref --tags | grep -q -w -F "refs/tags/${VERSION}"; then
+            echo "Version ${VERSION} already exists. Skipping release."
+            echo "require=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          echo "Version ${VERSION} does not exist. New release is required."
+          echo "require=true" >> $GITHUB_OUTPUT
+
+  publish:
+    runs-on: ubuntu-slim
+    needs: [check]
+    # Only run the release job when a new release is required to avoid unnecessary runs.
+    if: needs.check.outputs.release_required == 'true'
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      # Takumi Guard is not required here since we are not installing any dependencies in release.
+      - uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
+        with:
+          version: 11
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+          cache: pnpm
+
+      # Make pnpm publish idempotent to allow re-running the release job without bumping the version.
+      # This is helpful when `pnpm publish` succeeds and `gh release create` fails.
+      - name: Check if the package version is already published
+        id: package
+        run: |
+          PACKAGE_NAME="$(jq -r '.name' package.json)"
+          PACKAGE_VERSION="$(jq -r '.version' package.json)"
+          echo "version=${PACKAGE_VERSION}" >> "$GITHUB_OUTPUT"
+          set +e
+          pnpm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" version
+          RESULT=$?
+          set -e
+          if [ $RESULT -eq 0 ]; then
+            echo "Package ${PACKAGE_NAME}@${PACKAGE_VERSION} is already published. Skipping pnpm publish."
+            echo "published=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "Package ${PACKAGE_NAME}@${PACKAGE_VERSION} is not published yet."
+          echo "published=false" >> "$GITHUB_OUTPUT"
+
+      - name: Release to npm registry
+        if: steps.package.outputs.published != 'true'
+        run: |
+          pnpm publish \
+            --registry https://registry.npmjs.org/ \
+            --access public \
+            --no-git-checks
+
+      - name: Create GitHub release
+        env:
+          VERSION: ${{ steps.package.outputs.version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "${VERSION}" --generate-notes --target "$GITHUB_SHA"
