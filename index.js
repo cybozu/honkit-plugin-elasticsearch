@@ -1,6 +1,4 @@
-var Entities = require('html-entities').AllHtmlEntities;
-
-var Html = new Entities();
+var { decode } = require('html-entities');
 
 var documentsStore = [];
 
@@ -25,7 +23,7 @@ module.exports = {
       var text;
       text = page.content;
       // Decode HTML
-      text = Html.decode(text);
+      text = decode(text);
       // Strip HTML tags
       text = text.replace(/(<([^>]+)>)/ig, '');
 

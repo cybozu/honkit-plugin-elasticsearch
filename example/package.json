@@ -1,0 +1,18 @@
+{
+  "name": "honkit-plugin-elasticsearch-example",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "build": "honkit build",
+    "serve": "honkit serve"
+  },
+  "dependencies": {
+    "honkit": "catalog:",
+    "honkit-plugin-elasticsearch": "workspace:*"
+  },
+  "dependenciesMeta": {
+    "honkit-plugin-elasticsearch": {
+      "injected": true
+    }
+  }
+}

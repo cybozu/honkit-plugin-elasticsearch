@@ -1,0 +1,14 @@
+{
+  "plugins": [
+    "-lunr",
+    "elasticsearch"
+  ],
+  "pluginsConfig": {
+    "elasticsearch": {
+      "host": "http://localhost:9200",
+      "index": "honkit-test",
+      "apiKey": "dummy",
+      "maxResults": 30
+    }
+  }
+}
