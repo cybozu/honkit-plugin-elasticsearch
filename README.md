@@ -16,7 +16,7 @@ To use this plugin, disable `lunr` and add `elasticsearch` to your `book.json`:
 {
   "plugins": [
     "-lunr",
-    "elasticsearch"
+    "@cybozu/honkit-plugin-elasticsearch"
   ],
   "pluginsConfig": {
     "elasticsearch": {
@@ -32,7 +32,7 @@ To use this plugin, disable `lunr` and add `elasticsearch` to your `book.json`:
 Install the plugin:
 
 ```sh
-npm install --save-dev honkit honkit-plugin-elasticsearch
+npm install --save-dev honkit @cybozu/honkit-plugin-elasticsearch
 ```
 
 Building your book will generate `_book/search_index.json` in Elasticsearch `_bulk` format.

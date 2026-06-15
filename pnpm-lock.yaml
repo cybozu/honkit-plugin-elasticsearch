@@ -24,14 +24,14 @@ importers:
 
   example:
     dependencies:
+      '@cybozu/honkit-plugin-elasticsearch':
+        specifier: workspace:*
+        version: file:(honkit@6.2.1)
       honkit:
         specifier: 'catalog:'
         version: 6.2.1
-      honkit-plugin-elasticsearch:
-        specifier: workspace:*
-        version: file:(honkit@6.2.1)
     dependenciesMeta:
-      honkit-plugin-elasticsearch:
+      '@cybozu/honkit-plugin-elasticsearch':
         injected: true
 
 packages:
@@ -46,6 +46,12 @@ packages:
   '@asciidoctor/core@2.2.9':
     resolution: {integrity: sha512-tIPRHo1T2SFmAm+j77cDsj0RuaszP7xJxsaVTTAF5CwKyTbazw9TnIVlpIWM5yWfIWAWcAZy92RcnPgMJwny1w==}
     engines: {node: '>=8.11', npm: '>=5.0.0', yarn: '>=1.1.0'}
+
+  '@cybozu/honkit-plugin-elasticsearch@file:':
+    resolution: {directory: '', type: directory}
+    engines: {honkit: '>=6', node: '>=20', pnpm: '>=11'}
+    peerDependencies:
+      honkit: '>=6'
 
   '@honkit/asciidoc@6.2.1':
     resolution: {integrity: sha512-nSTJnYPcj0+1W5v02LVRNJZ1FFuLObCmXB87ZAE4KJ91NU98VbPWGsF1Tc+Ef7l3WdxB+F2uVg5a0GRYGuuZbw==}
@@ -455,12 +461,6 @@ packages:
   highlight.js@11.11.1:
     resolution: {integrity: sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w==}
     engines: {node: '>=12.0.0'}
-
-  'honkit-plugin-elasticsearch@file:':
-    resolution: {directory: '', type: directory}
-    engines: {honkit: '>=6', node: '>=20', pnpm: '>=11'}
-    peerDependencies:
-      honkit: '>=6'
 
   honkit@6.2.1:
     resolution: {integrity: sha512-oV7t+u6J0HYVn6RIcFiSt0WArGhbM/Dy7zpJqE35RMAruOhuA0Qai/DvO6bm3TPycbsZ6vacuQ0AWVKaY475Ig==}
@@ -924,6 +924,11 @@ snapshots:
       asciidoctor-opal-runtime: 0.3.4
       unxhr: 1.2.0
 
+  '@cybozu/honkit-plugin-elasticsearch@file:(honkit@6.2.1)':
+    dependencies:
+      honkit: 6.2.1
+      html-entities: 2.6.0
+
   '@honkit/asciidoc@6.2.1':
     dependencies:
       '@honkit/html': 6.2.1
@@ -1353,11 +1358,6 @@ snapshots:
       function-bind: 1.1.2
 
   highlight.js@11.11.1: {}
-
-  honkit-plugin-elasticsearch@file:(honkit@6.2.1):
-    dependencies:
-      honkit: 6.2.1
-      html-entities: 2.6.0
 
   honkit@6.2.1:
     dependencies:

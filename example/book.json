@@ -1,7 +1,7 @@
 {
   "plugins": [
     "-lunr",
-    "elasticsearch"
+    "@cybozu/honkit-plugin-elasticsearch"
   ],
   "pluginsConfig": {
     "elasticsearch": {

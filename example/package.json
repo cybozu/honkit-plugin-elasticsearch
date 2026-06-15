@@ -8,10 +8,10 @@
   },
   "dependencies": {
     "honkit": "catalog:",
-    "honkit-plugin-elasticsearch": "workspace:*"
+    "@cybozu/honkit-plugin-elasticsearch": "workspace:*"
   },
   "dependenciesMeta": {
-    "honkit-plugin-elasticsearch": {
+    "@cybozu/honkit-plugin-elasticsearch": {
       "injected": true
     }
   }
