@@ -11,6 +11,7 @@ concurrency:
 jobs:
   build-and-verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: read
       id-token: write
@@ -27,6 +28,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
 
@@ -47,7 +50,7 @@ jobs:
 
       - name: Wait for Elasticsearch
         run: |
-          for i in {1..30}; do
+          for _ in {1..30}; do
             if curl -fsS http://localhost:9200/_cluster/health >/dev/null; then
               echo "Elasticsearch is up"; exit 0
             fi
