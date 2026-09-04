@@ -4,4 +4,4 @@ packages:
   - example
 
 catalog:
-  honkit: ^6.2.1
+  honkit: ^6.2.2

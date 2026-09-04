@@ -3,6 +3,7 @@
   "description": "HonKit search plugin for Elasticsearch",
   "main": "index.js",
   "version": "0.5.0",
+  "packageManager": "pnpm@11.25.0",
   "scripts": {
     "test": "node --test --test-reporter=spec test/search-index.test.js",
     "test:e2e": "RUN_ES_TESTS=1 node --test --test-reporter=spec test/elasticsearch.test.js"
@@ -15,8 +16,7 @@
   ],
   "engines": {
     "node": ">=20",
-    "honkit": ">=6",
-    "pnpm": ">=11"
+    "honkit": ">=6"
   },
   "peerDependencies": {
     "honkit": ">=6"
